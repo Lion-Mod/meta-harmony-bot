@@ -17,6 +17,10 @@ def song_getter(song_name : str, artist_name : str) -> Dict:
     # Example output : {"Verse" : ["Cmaj", "Dmaj", "Gmaj"], "Chorus", ["Gmaj", "Amin"]}
     cleaned_song = {}
     key_counts = {}
+    current_song_section = None
+
+    # If no first element with [] around it create the first element so the dictionary works below
+    unclean_chord_sheet_data.insert(0, "[song]")
 
     for item in unclean_chord_sheet_data:
         if item.startswith('['):
