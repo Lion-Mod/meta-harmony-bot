@@ -20,7 +20,10 @@ def song_getter(song_name : str, artist_name : str) -> Dict:
     current_song_section = None
 
     # If no first element with [] around it create the first element so the dictionary works below
-    unclean_chord_sheet_data.insert(0, "[song]")
+    if unclean_chord_sheet_data[0].startswith('[') == False:
+        unclean_chord_sheet_data.insert(0, "[song]")
+    else:
+        pass
 
     for item in unclean_chord_sheet_data:
         if item.startswith('['):
