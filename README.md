@@ -38,6 +38,8 @@ print(chords)
 ```
 
 ## Todos
+* Get data cleanup to be able to handle inversions
+* More colouring - sus chords, min7b5 chords, other extensions?
 * Identify most likely key of each section of the song is
 * Identify most likely mode each section of the song is
 * Visualise the coloured chords in an interactive web app
