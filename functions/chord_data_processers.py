@@ -113,7 +113,7 @@ def get_unclean_chord_data(url : str):
         
         part = re.sub(r'^\d+$', '', content.text)
         
-        if part.startswith("[") or (len(part) < 6 and part != ""):
+        if part.startswith("[") or (len(part) < 8 and part != ""):
             unclean_chord_sheet_data.append(part)
         else:
             pass
@@ -126,36 +126,68 @@ def reword_unclean_chord_name(chord : str):
     Takes a string in and performs some clean up / rewording given unclean data can contain inconsistent chord naming or the chord colourer needs a better format
     Example : 'C' should be 'Cmaj', 'C7' becomes 'Cdom7', 'Bb' should be 'Bbmaj'
     """
-
+    
     # If it's a song part then leave it alone
     if chord.startswith("["):
         return chord
     
+
     # Otherwise perform chord cleanup
     else:
         root_note = re.findall(r'[A-G][b#]?', chord)[0]
         chord_type = chord.replace(root_note, "")
+    
 
+    # Handle any inversions
+    if "/" in chord_type:
+        chord_parts = chord_type.split("/")
+        chord_type = chord_parts[0]
+        bass_note = chord_parts[1]
+
+        # Adjust chord and bass note if necessary
         if chord_type == "":
-            return root_note + "maj"
-        elif chord_type in ["min7", "maj7"]:
-            return chord
+            chord_type += "maj"
+        elif chord_type in ["min7", "maj7", "min", "maj"]:
+            pass
         elif chord_type == "m":
-            return root_note + "min"
+            chord_type = 'min'
         elif chord_type == "m7":
-            return root_note + "min7"
+            chord_type = 'min7'
         elif chord_type == "7":
-            return root_note + "dom7"
-        else:
-            return chord
+            chord_type = 'dom7'
+
+        return root_note + chord_type + "/" + bass_note
+
+
+    # Handle standard chords (no inversions)
+    if chord_type == "":
+        return root_note + "maj"
+    elif chord_type in ["min7", "maj7", "min", "maj"]:
+        return chord + chord_type
+    elif chord_type == "m":
+        return root_note + "min"
+    elif chord_type == "m7":
+        return root_note + "min7"
+    elif chord_type == "7":
+        return root_note + "dom7"
+
+    else:
+        return chord
 
 
 def get_colours_of_chords_and_extensions(chord : str):
     """
     Get the colour of the chord and it's extensions
     """
-    # Get root of the chord
+    # Get root of the chord (and bass note if an inversion)
     root = re.search(r'[A-Z][b#]?', chord).group(0)
+    bass_note = re.search(r'/[A-Z][b#]?', chord)
+
+    if bass_note is None:
+        bass_note = None
+    else:
+        bass_note = bass_note.group(0)
+
 
     # Get the chord quality (if any)
     chord_quality = re.search(r'min|maj|dom', chord)
@@ -188,7 +220,7 @@ def get_colours_of_chords_and_extensions(chord : str):
         else:
             extension_colour = None
 
-    return root, chord_quality, chord_colour, extension, extension_type, extension_colour
+    return root, bass_note, chord_quality, chord_colour, extension, extension_type, extension_colour
 
 
 def string_to_dictionary(llm_output):
