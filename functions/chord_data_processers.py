@@ -46,6 +46,42 @@ chord2colour = {'Cmaj' : 'o',
                 'Bbmin' : 'p',
                 'Bmin' : 'g',
 
+                'Cmaj7' : 'o',
+                'C#maj7' : 'p',
+                'Dbmaj7' : 'p',
+                'Dmaj7' : 'g',
+                'D#maj7' : 'o',
+                'Ebmaj7' : 'o',
+                'Emaj7' : 'p',
+                'Fmaj7' : 'g',
+                'F#maj7' : 'o',
+                'Gbmaj7' : 'o',
+                'Gmaj7' : 'p',
+                'G#maj7' : 'g',
+                'Abmaj7' : 'g',
+                'Amaj7' : 'o',
+                'A#maj7' : 'p',
+                'Bbmaj7' : 'p',
+                'Bmaj7' : 'g',
+                
+                'Cmin7' : 'o',
+                'C#min7' : 'p',
+                'Dbmin7' : 'p',
+                'Dmin7' : 'g',
+                'D#min7' : 'o',
+                'Ebmin7' : 'o',
+                'Emin7' : 'p',
+                'Fmin7' : 'g',
+                'F#min7' : 'o',
+                'Gbmin7' : 'o',
+                'Gmin7' : 'p',
+                'G#min7' : 'g',
+                'Abmin7' : 'g',
+                'Amin7' : 'o',
+                'A#min7' : 'p',
+                'Bbmin7' : 'p',
+                'Bmin7' : 'g',
+
                 'Csus' : 'o',
                 'C#sus' : 'p',
                 'Dbsus' : 'p',
@@ -119,8 +155,6 @@ extension2extension_type = {'b5' : 'syntonic',
                             'b13' : 'syntonic',
                             '13' : 'complimentary',
                             'min6' : 'common',
-                            'maj7' : 'complimentary',
-                            'min7' : 'complimentary',
                             'dom7' : 'syntonic',
                             'min7b5' : 'common',
                             'sus2' : 'complimentary',
@@ -262,7 +296,7 @@ def get_colours_of_chords_and_extensions(chord : str):
 
 
     # Get the chord quality (if it matches the below chord qualities)
-    chord_quality = re.search(r'min|maj|sus|dom|dim', chord)
+    chord_quality = re.search(r'min[7]?|maj[7]?|sus|dom|dim', chord)
 
     if chord_quality is None:
         AssertionError('No chord quality detected')
@@ -277,7 +311,7 @@ def get_colours_of_chords_and_extensions(chord : str):
     
 
     # Extension 1
-    extension_pattern = "(b5|b6|min6|min7b5|[dom|min|maj]+7|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
+    extension_pattern = "(b5|b6|min6|min7b5|dom7|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
     extension_one = re.search(extension_pattern, chord)
 
     if extension_one is None: 
