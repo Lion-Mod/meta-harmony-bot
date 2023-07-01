@@ -46,6 +46,24 @@ chord2colour = {'Cmaj' : 'o',
                 'Bbmin' : 'p',
                 'Bmin' : 'g',
 
+                'Csus' : 'o',
+                'C#sus' : 'p',
+                'Dbsus' : 'p',
+                'Dsus' : 'g',
+                'D#sus' : 'o',
+                'Ebsus' : 'o',
+                'Esus' : 'p',
+                'Fsus' : 'g',
+                'F#sus' : 'o',
+                'Gbsus' : 'o',
+                'Gsus' : 'p',
+                'G#sus' : 'g',
+                'Absus' : 'g',
+                'Asus' : 'o',
+                'A#sus' : 'p',
+                'Bbsus' : 'p',
+                'Bsus' : 'g',
+
                 'Cdom' : 'o',
                 'C#dom' : 'p',
                 'Dbdom' : 'p',
@@ -62,24 +80,70 @@ chord2colour = {'Cmaj' : 'o',
                 'Adom' : 'o',
                 'A#dom' : 'p',
                 'Bbdom' : 'p',
-                'Bdom' : 'g'}
+                'Bdom' : 'g',
+                
+                'Cdim' : 'y',
+                'C#dim' : 'r',
+                'Dbdim' : 'r',
+                'Ddim' : 'b',
+                'D#dim' : 'y',
+                'Ebdim' : 'y',
+                'Edim' : 'r',
+                'Fdim' : 'b',
+                'F#dim' : 'y',
+                'Gbdim' : 'y',
+                'Gdim' : 'r',
+                'G#dim' : 'b',
+                'Abdim' : 'b',
+                'Adim' : 'y',
+                'A#dim' : 'r',
+                'Bbdim' : 'r',
+                'Bdim' : 'b'}
 
 
 # The extension type for each extension
-# This isn't all of them, just a start
-# c = complimentary
-extension2extension_type = {'add9' : 'c',
-                            'b9' : 'common or syntonic?',
-                            '7' : 'c',
-                            'add11' : 'c',
-                            'b6' : 'c'}
+# Some chords e.g. Fdom11 are considered their own 
+
+# dominant chords e.g. Bdom9, Bdom11, Bdom13, Bdomb9
+# sus chords e.g. Bsus2, Bsus4
+
+extension2extension_type = {'b5' : 'syntonic',
+                            'b6' : 'complimentary',
+                            #'6' : 'common',
+                            '9' : 'complimentary',
+                            'b9' : 'syntonic',
+                            '#9' : 'common',
+                            'b11' : 'syntonic',
+                            '11' : 'complimentary',
+                            '#11' : 'common',
+                            'b13' : 'syntonic',
+                            '13' : 'complimentary',
+                            'min6' : 'common',
+                            'maj7' : 'complimentary',
+                            'min7' : 'complimentary',
+                            'dom7' : 'syntonic',
+                            'min7b5' : 'common',
+                            'sus2' : 'complimentary',
+                            'sus4' : 'complimentary'}
 
 
 # The appropriate complimentary colour for each secondary colour
+# b = blue
+# r = red
+# p = yellow
 complimentary2colour = {'o' : 'b',
                         'g' : 'r',
                         'p' : 'y'}
 
+# The appropriate syntonic colour for each secondary colour
+syntonic2colour = {'o' : 'r',
+                   'g' : 'y',
+                   'p' : 'b'}
+
+# The appropriate common cadence colour for each secondary colour
+common2colour = {'o' : 'y',
+                 'g' : 'b',
+                 'p' : 'r'}
 
 def url_creator(song_name : str, artist_name : str):
     """Gets the url from chordbook to extract chords from"""
@@ -179,8 +243,16 @@ def get_colours_of_chords_and_extensions(chord : str):
     """
     Get the colour of the chord and it's extensions
     """
-    # Get root of the chord (and bass note if an inversion)
-    root = re.search(r'[A-Z][b#]?', chord).group(0)
+    # Get root of the chord
+    root = re.search(r'[A-Z][b#]?', chord)
+    
+    if root is None:
+        AssertionError('No root note detected')
+    else:
+        root = root.group(0)
+    
+
+    # Get the inversion (if applicable)
     bass_note = re.search(r'/[A-Z][b#]?', chord)
 
     if bass_note is None:
@@ -189,8 +261,8 @@ def get_colours_of_chords_and_extensions(chord : str):
         bass_note = bass_note.group(0)
 
 
-    # Get the chord quality (if any)
-    chord_quality = re.search(r'min|maj|dom', chord)
+    # Get the chord quality (if it matches the below chord qualities)
+    chord_quality = re.search(r'min|maj|sus|dom|dim', chord)
 
     if chord_quality is None:
         AssertionError('No chord quality detected')
@@ -202,25 +274,56 @@ def get_colours_of_chords_and_extensions(chord : str):
     # - Chord colour (secondary colour)
     chord_colour = chord2colour[root+chord_quality]
 
-    # - Extension colour (primary colour)  
-    extensions = re.search(r'(add9|7|add1|b6)', chord)
+    
 
-    if extensions is None: 
-        extension = ""
-        extension_type = ""
-        extension_colour = ""
+    # Extension 1
+    extension_pattern = "(b5|b6|min6|min7b5|[dom|min|maj]+7|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
+    extension_one = re.search(extension_pattern, chord)
+
+    if extension_one is None: 
+        extension_one = ""
+        extension_one_type = ""
+        extension_one_colour = ""
 
     else: 
-        # Might need a loop here to go through all extensions. This currently only does one extension
-        extension = extensions.group(0)
-        extension_type = extension2extension_type[extension]
+        extension_one = extension_one.group(0)
+        extension_one_type = extension2extension_type[extension_one]
         
-        if extension_type == 'c':
-            extension_colour = complimentary2colour[chord_colour]
+        if extension_one_type == 'complimentary':
+            extension_one_colour = complimentary2colour[chord_colour]
+        elif extension_one_type == 'syntonic':
+            extension_one_colour = syntonic2colour[chord_colour]
+        elif extension_one_type == 'common':
+            extension_one_colour = common2colour[chord_colour]
         else:
-            extension_colour = None
+            extension_one_colour = None
 
-    return root, bass_note, chord_quality, chord_colour, extension, extension_type, extension_colour
+    
+    # Extension 2
+    extension_two = re.search(extension_pattern, chord.replace(extension_one, ""))
+
+    if extension_two is None: 
+        extension_two = ""
+        extension_two_type = ""
+        extension_two_colour = ""
+
+    else: 
+        extension_two = extension_two.group(0)
+        extension_two_type = extension2extension_type[extension_two]
+        
+        if extension_two_type == 'complimentary':
+            extension_two_colour = complimentary2colour[chord_colour]
+        elif extension_two_type == 'syntonic':
+            extension_two_colour = syntonic2colour[chord_colour]
+        elif extension_two_type == 'common':
+            extension_two_colour = common2colour[chord_colour]
+        else:
+            extension_two_colour = None
+    
+
+    return (root, bass_note, chord_quality, chord_colour, 
+           extension_one, extension_one_type, extension_one_colour, 
+           extension_two, extension_two_type, extension_two_colour)
 
 
 def string_to_dictionary(llm_output):
