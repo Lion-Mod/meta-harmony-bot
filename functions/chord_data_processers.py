@@ -139,13 +139,8 @@ chord2colour = {'Cmaj' : 'o',
 
 # The extension type for each extension
 # Some chords e.g. Fdom11 are considered their own 
-
-# dominant chords e.g. Bdom9, Bdom11, Bdom13, Bdomb9
-# sus chords e.g. Bsus2, Bsus4
-
 extension2extension_type = {'b5' : 'syntonic',
                             'b6' : 'complimentary',
-                            #'6' : 'common',
                             '9' : 'complimentary',
                             'b9' : 'syntonic',
                             '#9' : 'common',
@@ -155,7 +150,7 @@ extension2extension_type = {'b5' : 'syntonic',
                             'b13' : 'syntonic',
                             '13' : 'complimentary',
                             'min6' : 'common',
-                            'dom7' : 'syntonic',
+                            'dom' : 'syntonic',
                             'min7b5' : 'common',
                             'sus2' : 'complimentary',
                             'sus4' : 'complimentary'}
@@ -311,7 +306,7 @@ def get_colours_of_chords_and_extensions(chord : str):
     
 
     # Extension 1
-    extension_pattern = "(b5|b6|min6|min7b5|dom7|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
+    extension_pattern = "(b5|b6|min6|min7b5|dom|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
     extension_one = re.search(extension_pattern, chord)
 
     if extension_one is None: 
