@@ -301,62 +301,18 @@ def get_colours_of_chords_and_extensions(chord : str):
         AssertionError('No chord quality detected')
     else:
         chord_quality = chord_quality.group(0)
-
+        
 
     # Get the appropriate chord colour (secondary colour unless it's a diminished chord)
     chord_colour = chord2colour[root+chord_quality]
 
-    # Get the appropriate colour for each extension
-    # - Extension 1
-    """ extension_pattern = "(b5|b6|min6|min7b5|dom|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
-    extension_one = re.search(extension_pattern, chord)
-
-    if extension_one is None: 
-        extension_one = ""
-        extension_one_type = ""
-        extension_one_colour = ""
-
-    else: 
-        extension_one = extension_one.group(0)
-        extension_one_type = extension2extension_type[extension_one]
-        
-        if extension_one_type == 'complimentary':
-            extension_one_colour = complimentary2colour[chord_colour]
-        elif extension_one_type == 'syntonic':
-            extension_one_colour = syntonic2colour[chord_colour]
-        elif extension_one_type == 'common':
-            extension_one_colour = common2colour[chord_colour]
-        else:
-            extension_one_colour = None
-
-    
-    # - Extension 2
-    extension_two = re.search(extension_pattern, chord.replace(extension_one, ""))
-
-    if extension_two is None: 
-        extension_two = ""
-        extension_two_type = ""
-        extension_two_colour = ""
-
-    else: 
-        extension_two = extension_two.group(0)
-        extension_two_type = extension2extension_type[extension_two]
-        
-        if extension_two_type == 'complimentary':
-            extension_two_colour = complimentary2colour[chord_colour]
-        elif extension_two_type == 'syntonic':
-            extension_two_colour = syntonic2colour[chord_colour]
-        elif extension_two_type == 'common':
-            extension_two_colour = common2colour[chord_colour]
-        else:
-            extension_two_colour = None """
-
+    # Get the extensions (if applicable), the max expected is 3
     extension_pattern = "(b5|b6|min6|min7b5|dom|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
-
     extensions = re.findall(extension_pattern, chord)
 
     extension_info = []
 
+    # Get the colour of each extension
     for extension in extensions:
         extension_type = extension2extension_type.get(extension)
         if extension_type is not None:
@@ -371,10 +327,10 @@ def get_colours_of_chords_and_extensions(chord : str):
 
             extension_info.append((extension, extension_type, extension_colour))
 
+    # Pull out each extensions information (what the extension is, the "type" of extension, the colour of it)
     extension_one, extension_one_type, extension_one_colour = extension_info[0] if extension_info else ("", "", "")
     extension_two, extension_two_type, extension_two_colour = extension_info[1] if len(extension_info) > 1 else ("", "", "")
     extension_three, extension_three_type, extension_three_colour = extension_info[2] if len(extension_info) > 2 else ("", "", "")
-    
 
     return (root, bass_note, chord_quality, chord_colour, 
            extension_one, extension_one_type, extension_one_colour, 
