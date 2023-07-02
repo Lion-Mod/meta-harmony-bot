@@ -40,7 +40,10 @@ print(chords)
 ## Todos
 ~~* Get data cleanup to be able to handle inversions~~
 ~~* More colouring - sus chords, min7b5 chords, other extensions?~~
-* Maybe need to handle dominant 9th, 11ths etc?
+~~* Handle dominant 9th, 11ths etc~~
+* Basic reharm, you enter key cube you're in (this determines alphacube and chord functions) and state to reharm to a mode e.g C lydian (shift SD up)
+* Do the above but for an entire section e.g. change the intro to be xxx
+(Don't affect chords not in the key e.g. Cmajor key, there's a Bb chord, leave it)
 * Identify most likely key of each section of the song is
 * Identify most likely mode each section of the song is
 * Visualise the coloured chords in an interactive web app
