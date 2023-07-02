@@ -10,6 +10,9 @@ headers = { 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Geck
 # o = orange
 # p = purple
 # g = green
+# y = yellow
+# r = red
+# b = blue
 chord2colour = {'Cmaj' : 'o',
                 'C#maj' : 'p',
                 'Dbmaj' : 'p',
@@ -159,7 +162,7 @@ extension2extension_type = {'b5' : 'syntonic',
 # The appropriate complimentary colour for each secondary colour
 # b = blue
 # r = red
-# p = yellow
+# y = yellow
 complimentary2colour = {'o' : 'b',
                         'g' : 'r',
                         'p' : 'y'}
@@ -173,6 +176,7 @@ syntonic2colour = {'o' : 'r',
 common2colour = {'o' : 'y',
                  'g' : 'b',
                  'p' : 'r'}
+
 
 def url_creator(song_name : str, artist_name : str):
     """Gets the url from chordbook to extract chords from"""
@@ -299,13 +303,11 @@ def get_colours_of_chords_and_extensions(chord : str):
         chord_quality = chord_quality.group(0)
 
 
-    # Assign the appropriate colours
-    # - Chord colour (secondary colour)
+    # Get the appropriate chord colour (secondary colour unless it's a diminished chord)
     chord_colour = chord2colour[root+chord_quality]
 
-    
-
-    # Extension 1
+    # Get the appropriate colour for each extension
+    # - Extension 1
     extension_pattern = "(b5|b6|min6|min7b5|dom|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
     extension_one = re.search(extension_pattern, chord)
 
@@ -328,7 +330,7 @@ def get_colours_of_chords_and_extensions(chord : str):
             extension_one_colour = None
 
     
-    # Extension 2
+    # - Extension 2
     extension_two = re.search(extension_pattern, chord.replace(extension_one, ""))
 
     if extension_two is None: 
