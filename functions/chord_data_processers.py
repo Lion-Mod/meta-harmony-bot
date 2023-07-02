@@ -308,7 +308,7 @@ def get_colours_of_chords_and_extensions(chord : str):
 
     # Get the appropriate colour for each extension
     # - Extension 1
-    extension_pattern = "(b5|b6|min6|min7b5|dom|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
+    """ extension_pattern = "(b5|b6|min6|min7b5|dom|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
     extension_one = re.search(extension_pattern, chord)
 
     if extension_one is None: 
@@ -349,12 +349,37 @@ def get_colours_of_chords_and_extensions(chord : str):
         elif extension_two_type == 'common':
             extension_two_colour = common2colour[chord_colour]
         else:
-            extension_two_colour = None
+            extension_two_colour = None """
+
+    extension_pattern = "(b5|b6|min6|min7b5|dom|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
+
+    extensions = re.findall(extension_pattern, chord)
+
+    extension_info = []
+
+    for extension in extensions:
+        extension_type = extension2extension_type.get(extension)
+        if extension_type is not None:
+            if extension_type == 'complimentary':
+                extension_colour = complimentary2colour.get(chord_colour)
+            elif extension_type == 'syntonic':
+                extension_colour = syntonic2colour.get(chord_colour)
+            elif extension_type == 'common':
+                extension_colour = common2colour.get(chord_colour)
+            else:
+                extension_colour = None
+
+            extension_info.append((extension, extension_type, extension_colour))
+
+    extension_one, extension_one_type, extension_one_colour = extension_info[0] if extension_info else ("", "", "")
+    extension_two, extension_two_type, extension_two_colour = extension_info[1] if len(extension_info) > 1 else ("", "", "")
+    extension_three, extension_three_type, extension_three_colour = extension_info[2] if len(extension_info) > 2 else ("", "", "")
     
 
     return (root, bass_note, chord_quality, chord_colour, 
            extension_one, extension_one_type, extension_one_colour, 
-           extension_two, extension_two_type, extension_two_colour)
+           extension_two, extension_two_type, extension_two_colour,
+           extension_three, extension_three_type, extension_three_colour)
 
 
 def string_to_dictionary(llm_output):

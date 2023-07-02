@@ -11,7 +11,7 @@ color_mapping = {
 }
 
 
-def create_image_from_dictionary(chord_main_colours, first_extension_colours, second_extension_colours):
+def create_image_from_dictionary(chord_main_colours, first_extension_colours, second_extension_colours, third_extension_colours):
     """
     Creates an image of a song's chords with the appropriate meta harmony colours
     """
@@ -28,12 +28,12 @@ def create_image_from_dictionary(chord_main_colours, first_extension_colours, se
     section_number = 0
 
     # Create squares for each section's chords and colour it with the secondary colour appropriately
-    for coloured_sections in zip(chord_main_colours.items(), first_extension_colours.items(), second_extension_colours.items()):
+    for coloured_sections in zip(chord_main_colours.items(), first_extension_colours.items(), 
+                                 second_extension_colours.items(), third_extension_colours.items()):
 
-        # Get the secondary, first extension and second extension colours
+        # Get the main chord colour and the extension colours
         chord_main_colours = coloured_sections[0][1]
-        first_extension_colours = coloured_sections[1][1]
-        second_extension_colours = coloured_sections[2][1]
+        first_extension_colours, second_extension_colours, third_extension_colours = coloured_sections[1][1], coloured_sections[2][1], coloured_sections[3][1]
   
         # The 3 variables below ensure chords are drawn correctly
         chord_number_in_section = 0
@@ -41,7 +41,9 @@ def create_image_from_dictionary(chord_main_colours, first_extension_colours, se
         number_of_chords_in_sections = len(chord_main_colours)
 
         # Output each chord's colours as a square one at a time
-        for chord_main_colour, first_extension_colour, second_extension_colour in zip(chord_main_colours, first_extension_colours, second_extension_colours):
+        for (chord_main_colour, first_extension_colour, 
+             second_extension_colour, third_extension_colour) in zip(chord_main_colours, first_extension_colours, 
+                                                                    second_extension_colours, third_extension_colours):
 
             # Set the correct x origin
             x_origin = (chord_number_in_section % 4) * square_width
@@ -50,19 +52,14 @@ def create_image_from_dictionary(chord_main_colours, first_extension_colours, se
             chord_main_colour = color_mapping.get(chord_main_colour, (0, 0, 0))
             draw.rectangle((x_origin, y, x_origin + square_width, y + square_width), fill = chord_main_colour)
             
-            # Do the same for first extension only if they exist and draw extensions as smaller squares in the chord square
-            if first_extension_colour == '':
-                pass
-            else:
-                first_extension_colour = color_mapping.get(first_extension_colour, (0, 0, 0))
-                draw.rectangle((x_origin, y, x_origin + square_width / 4, y + square_width / 4), fill = first_extension_colour)
-
-            # Same thing as the first extension but with any second extensions if they exist
-            if second_extension_colour == '':
-                pass
-            else:
-                second_extension_colour = color_mapping.get(second_extension_colour, (0, 0, 0))
-                draw.rectangle((x_origin + square_width / 4, y, x_origin + square_width / 2, y + square_width / 4), fill = second_extension_colour)
+            # Add the colours of the extensions (if applicable) as a smaller rectangle within the main chord's square
+            for i, extension_colour in enumerate([first_extension_colour, second_extension_colour, third_extension_colour], start = 1):
+                if extension_colour != '':
+                    extension_colour = color_mapping.get(extension_colour, (0, 0, 0))
+                    draw.rectangle((x_origin + square_width * (i - 1) / 3, y,
+                                    x_origin + square_width * i / 3, y + square_width / 4), fill = extension_colour)
+                else:
+                    AssertionError(f'Colouring extensions failed on extension number {i}')
 
             # Add one to the chord counter to ensure formatting of chords being drawn is correct
             chord_number_in_section += 1
