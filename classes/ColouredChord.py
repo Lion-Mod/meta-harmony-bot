@@ -187,7 +187,7 @@ class ColouredChord():
          self.extension_three, self.extension_three_type, self.extension_three_colour) = self.get_extensions()
 
     def __repr__(self):
-        print(f"""
+        return (f"""
                 Raw chord = {self.raw_chord}
                 Chord = {self.chord}
                 Root note = {self.root_note}
@@ -203,17 +203,10 @@ class ColouredChord():
         """
         Takes a string in and performs some clean up / rewording given unclean data can contain inconsistent chord naming or the chord colourer needs a better format
         Example : 'C' should be 'Cmaj', 'C7' becomes 'Cdom7', 'Bb' should be 'Bbmaj'
-        """
-        
-        # If it's a song part then leave it alone
-        if self.raw_chord.startswith("["):
-            return self.raw_chord
-        
-
-        # Otherwise perform chord cleanup
-        else:
-            root_note = re.findall(r'[A-G][b#]?', self.raw_chord)[0]
-            chord_type = self.raw_chord.replace(root_note, "")
+        """        
+        # Pull out the root note and chord type from the raw chord
+        root_note = re.findall(r'[A-G][b#]?', self.raw_chord)[0]
+        chord_type = self.raw_chord.replace(root_note, "")
         
 
         # Handle any inversions
@@ -231,6 +224,8 @@ class ColouredChord():
                 chord_type = 'min'
             elif chord_type == "m7":
                 chord_type = 'min7'
+            elif chord_type == "m7b5":
+                chord_type = 'min7b5'
             elif chord_type == "7":
                 chord_type = 'dom7'
 
@@ -241,11 +236,13 @@ class ColouredChord():
         if chord_type == "":
             return root_note + "maj"
         elif chord_type in ["min7", "maj7", "min", "maj"]:
-            return self.raw_chord + chord_type
+            return root_note + chord_type
         elif chord_type == "m":
             return root_note + "min"
         elif chord_type == "m7":
             return root_note + "min7"
+        elif chord_type == "m7b5":
+            return root_note + 'min7b5'
         elif chord_type == "7":
             return root_note + "dom7"
 

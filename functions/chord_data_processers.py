@@ -301,7 +301,7 @@ def get_colours_of_chords_and_extensions(chord : str):
         AssertionError('No chord quality detected')
     else:
         chord_quality = chord_quality.group(0)
-        
+
 
     # Get the appropriate chord colour (secondary colour unless it's a diminished chord)
     chord_colour = chord2colour[root+chord_quality]
@@ -332,7 +332,7 @@ def get_colours_of_chords_and_extensions(chord : str):
     extension_two, extension_two_type, extension_two_colour = extension_info[1] if len(extension_info) > 1 else ("", "", "")
     extension_three, extension_three_type, extension_three_colour = extension_info[2] if len(extension_info) > 2 else ("", "", "")
 
-    return (root, bass_note, chord_quality, chord_colour, 
+    return (chord, root, bass_note, chord_quality, chord_colour, 
            extension_one, extension_one_type, extension_one_colour, 
            extension_two, extension_two_type, extension_two_colour,
            extension_three, extension_three_type, extension_three_colour)
