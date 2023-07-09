@@ -12,4 +12,6 @@ def song_getter(song_name : str, artist_name : str) -> Dict:
     """
     url = url_creator(song_name = song_name, artist_name = artist_name)
 
-    return get_unclean_chord_data(url)      
+    unclean_chord_sheet_data = get_unclean_chord_data(url)
+
+    return structure_unclean_chord_data(unclean_chord_sheet_data)

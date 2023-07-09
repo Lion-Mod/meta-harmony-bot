@@ -44,13 +44,18 @@ def get_unclean_chord_data(url : str):
         else:
             pass
 
+    return unclean_chord_sheet_data
 
-    # Below reformats the data into a dictionary
-    # Example output : {"Verse" : ["Cmaj", "Dmaj", "Gmaj"], "Chorus", ["Gmaj", "Amin"]}
-    cleaned_song = {}
+
+def structure_unclean_chord_data(unclean_chord_sheet_data):
+    """
+    Take the unclean_chord_sheet_data and structure it nicely in a dictionary ready for processing    
+    
+    Example output : {"Verse" : ["Cmaj", "Dmaj", "Gmaj"], "Chorus", ["Gmaj", "Amin"]}
+    """
+    structured_song = {}
     key_counts = {}
     current_song_section = None
-
 
     # If no first element with [] around it create the first element so the dictionary works below
     if unclean_chord_sheet_data[0].startswith('[') == False:
@@ -65,20 +70,20 @@ def get_unclean_chord_data(url : str):
 
             # Check if a song section already exists in the dictionary, if it does add a number after it to distinguish other sections
             # Example : chorus, chorus_1, chorus_2
-            if current_song_section in cleaned_song:
+            if current_song_section in structured_song:
                 key_counts[current_song_section] += 1
                 current_song_section = f"{current_song_section}_{key_counts[current_song_section]}"
             else:
                 key_counts[current_song_section] = 0
                 
-            cleaned_song[current_song_section] = []
+            structured_song[current_song_section] = []
 
         elif current_song_section is not None and item:
-            cleaned_song[current_song_section].append(item)
+            structured_song[current_song_section].append(item)
 
-    cleaned_song = {section: [chord for chord in chords_in_section] for section, chords_in_section in cleaned_song.items()}
+    structured_song = {section: [chord for chord in chords_in_section] for section, chords_in_section in structured_song.items()}
 
-    return cleaned_song
+    return structured_song
 
 
 def string_to_dictionary(llm_output):
