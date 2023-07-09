@@ -153,7 +153,7 @@ extension2extension_type = {'b5' : 'syntonic',
                             'sus4' : 'complimentary'}
 
 
-# The appropriate complimentary colour for each secondary colour
+# The appropriate complimentary extension colour for each secondary colour
 # b = blue
 # r = red
 # y = yellow
@@ -162,19 +162,43 @@ complimentary2colour = {'o' : 'b',
                         'p' : 'y'}
 
 
-# The appropriate syntonic colour for each secondary colour
+# The appropriate syntonic extension colour for each secondary colour
 syntonic2colour = {'o' : 'r',
                    'g' : 'y',
                    'p' : 'b'}
 
 
-# The appropriate common cadence colour for each secondary colour
+# The appropriate common extension colour for each secondary colour
 common2colour = {'o' : 'y',
                  'g' : 'b',
                  'p' : 'r'}
 
 
 class ColouredChord():
+    """
+    Represents a coloured chord object.
+
+    This class takes a raw chord e.g. 'Cmaj' as input and
+    1. Cleans up the chord e.g. 'Cm' becomes 'Cmin'
+    2. Extracts the root note
+    3. Extracts the bass note (if any inversion)
+    4. Extracts the chord quality e.g. 'min7'
+    5. Extracts the chord colour e.g. 'o' for orange, this corresponds to the Meta Harmony colours
+    6. Extracts any extensions, their type and their colour
+
+    Attributes:
+        raw_chord (str): The raw chord that's inputted.
+
+    Properties:
+        chord (str): The cleaned and standardized version of the raw chord name.
+        root_note (str): The root note of the chord.
+        bass_note (str): The bass note of the chord (if applicable).
+        chord_quality (str): The quality (e.g., major, minor) of the chord.
+        chord_colour (str): The assigned Meta Harmony colour for the chord.
+        extension_xxx (str): The 1st, 2nd or 3rd extension of the chord (if present).
+        extension_xxx_type (str): The Meta Harmony extension type e.g. 'complimentary' of the 1st, 2nd or 3rd extension (if present).
+        extension_xxx_colour (str): The assigned Meta Harmony colour for the 1st, 2nd or 3rd extension (if present).
+    """
     def __init__(self, raw_chord):  
         self.raw_chord = raw_chord; assert type(self.raw_chord) == str
         self.chord = self.reword_unclean_chord_name()
@@ -185,6 +209,7 @@ class ColouredChord():
         (self.extension_one, self.extension_one_type, self.extension_one_colour, 
          self.extension_two, self.extension_two_type, self.extension_two_colour,
          self.extension_three, self.extension_three_type, self.extension_three_colour) = self.get_extensions()
+
 
     def __repr__(self):
         return (f"""
@@ -199,10 +224,14 @@ class ColouredChord():
                 Chord extension 3 = {self.extension_three}, {self.extension_three_type}, {self.extension_three_colour}
                 """)
 
+
     def reword_unclean_chord_name(self):
         """
-        Takes a string in and performs some clean up / rewording given unclean data can contain inconsistent chord naming or the chord colourer needs a better format
-        Example : 'C' should be 'Cmaj', 'C7' becomes 'Cdom7', 'Bb' should be 'Bbmaj'
+        Takes the raw_chord (string) in and performs some clean up / rewording given unclean data can contain inconsistent chord naming.
+         
+        This is needed for the chord colourer to work.
+
+        Example : 'C' becomes 'Cmaj', 'C7' becomes 'Cdom7', 'Bb' becomes 'Bbmaj'
         """        
         # Pull out the root note and chord type from the raw chord
         root_note = re.findall(r'[A-G][b#]?', self.raw_chord)[0]
@@ -249,6 +278,7 @@ class ColouredChord():
         else:
             return self.raw_chord
 
+
     def get_root_note(self):
         """
         Get root note of the chord
@@ -262,9 +292,10 @@ class ColouredChord():
 
         return root_note
 
+
     def get_bass_note(self):  
         """
-        Get bass note if the chord is an inversion
+        Get bass note of the chord if the chord is an inversion
         """
         bass_note = re.search(r'/[A-G][b#]?', self.chord)
 
@@ -275,9 +306,10 @@ class ColouredChord():
 
         return bass_note
 
+
     def get_chord_quality(self):
         """
-        Get the chord quality (if it matches the below chord qualities)
+        Get the chord quality if it matches the below chord qualities regex pattern
         """
         chord_quality = re.search(r'min[7]?|maj[7]?|sus|dom|dim', self.chord)
 
@@ -288,11 +320,13 @@ class ColouredChord():
 
         return chord_quality
 
+
     def get_chord_colour(self):
         """
-        Get the appropriate chord colour (secondary colour unless it's a diminished chord)
+        Get the appropriate chord colour (this will be a secondary colour unless it's a diminished chord)
         """
         return chord2colour[self.root_note + self.chord_quality]
+
 
     def get_extensions(self):
         """
@@ -327,6 +361,7 @@ class ColouredChord():
         return (extension_one, extension_one_type, extension_one_colour, 
                 extension_two, extension_two_type, extension_two_colour,
                 extension_three, extension_three_type, extension_three_colour)
+
 
     def get_colours(self):
         """

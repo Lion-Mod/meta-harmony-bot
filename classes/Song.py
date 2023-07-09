@@ -14,10 +14,30 @@ color_mapping = {
 
 
 class Song():
+    """
+    Stores data for the Song.
+
+    This class initializes a Song object with a song name, artist name, and a dictionary
+    representing the song's parts and chords in each part. It creates a list of Part objects based on
+    the provided song structure and chords.
+
+    The structure is Song has multiple Parts. Each Part has multiple ColouredChords
+
+    Attributes:
+        song_name (str): The name of the song.
+        artist_name (str): The name of the artist who performed the song.
+        song_structure_and_chords (dict): A dictionary representing the song structure and chords. 
+        The keys of the dictionary are part names e.g. 'intro', and the values are lists of raw chord names for each part.
+
+    Properties:
+        parts (list): A list of Part objects created based on the song structure and chords.
+    """
+
     def __init__(self, song_name, artist_name, song_structure_and_chords):
         self.song_name = song_name
         self.artist_name = artist_name
         self.parts = [Part(name = part_name, raw_chords = chords_of_part) for part_name, chords_of_part in song_structure_and_chords.items()]        
+
 
     def get_chord_colours(self):
         """
@@ -36,9 +56,10 @@ class Song():
         
         return song_chord_colours
 
+
     def create_coloured_chords_image(self):
         """
-        Creates an image of a song's chords with the appropriate meta harmony colours
+        Creates an image of a song's chords with the appropriate Meta Harmony colours
         """
         song_chord_colours = self.get_chord_colours()
 
