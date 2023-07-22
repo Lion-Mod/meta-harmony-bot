@@ -11,8 +11,8 @@
 Come to the [Discord](https://discord.gg/nwHRsgbx) to find out more!
 
 ## Uses of the crayon box
-1. Understand if there are common types of voice leading in a song
-2. See if certain artists, bands or genres use common chord movements
+1. Help understand the chord movements within a song(s)
+2. See if certain artists, bands or genres use common chord movements e.g. a lot of complimentary cadences
 
 
 ## Todos
