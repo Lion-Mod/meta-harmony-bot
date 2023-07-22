@@ -44,11 +44,21 @@ def get_right_border_colour(chord_colour, third_extension_colour):
 
 
 # App header
-st.title('Meta Harmony colourer')
-st.subheader('1. Input the composition of the track...')
+st.title('Meta Harmony Crayon Box 🖍️')
+
+# Example input
+st.subheader("Here's an example input")
+st.code("""
+        {'Intro' : ['Cmaj7', 'Emin', 'Dm'],
+         'Verse' : ['Cmaj7', 'Dmin', 'Gdom7'],
+         'Chorus' : ['Am', 'Gm7', 'Dm7']}
+        """, language='python')
 
 # Get the user input 
-song = st.text_input('', value = "{'Verse' : ['Cmaj7', 'Dmin', 'Gdom7']}")
+st.subheader('Input the composition of the track and hit "Enter"')
+song = st.text_input('user_input', 
+                     value = "{'Intro' : ['Cmaj7', 'Emin', 'Dm'], 'Verse' : ['Cmaj7', 'Dmin', 'Gdom7'], 'Chorus' : ['Am', 'Gm7', 'Dm7']}",
+                     label_visibility = 'hidden')
 
 # Once the input is done and Enter is hit, output the song with Meta Harmony colours
 if song:
