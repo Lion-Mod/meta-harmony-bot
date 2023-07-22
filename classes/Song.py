@@ -13,6 +13,75 @@ color_mapping = {
 }
 
 
+# All chords in each major key (including enharmonic equivalent)
+major_key_cubes = {
+    'C' : ['Cmaj', 'Dmin', 'Emin', 'Fmaj', 'Gmaj', 'Amin', 'Bdim'],
+
+    'C# / Db' : ['C#maj', 'D#min', 'Fmin', 'F#maj', 'G#maj', 'A#min', 'B#dim',
+                 'Dbmaj', 'Ebmin',         'Gbmaj', 'Abmaj', 'Bbmin', 'Cdim'],
+
+    'D' : ['Dmaj', 'Emin', 'F#min', 'Gmaj', 'Amaj', 'Bmin', 'C#dim',
+                           'Gbmin',                         'Dbdim'],
+
+    'D# / Eb' : ['D#maj', 'Fmin', 'Gmin', 'Abmaj', 'Bbmaj', 'Cmin', 'Ddim',
+                 'Ebmaj',                 'G#maj', 'A#maj'],
+
+    'E' : ['Emaj', 'F#min', 'G#min', 'Amaj', 'Bmaj', 'C#min', 'D#dim',
+                   'Gbmin', 'Abmin',                 'Dbmin', 'Ebdim'],
+
+    'F' : ['Fmaj', 'Gmin', 'Amin', 'Bbmaj', 'Cmaj', 'Dmin', 'Edim',
+                                   'A#maj'],
+    
+    'F# / Gb' : ['F#maj', 'G#min', 'A#min', 'Bmaj', 'C#maj', 'D#min', 'E#dim',
+                 'Gbmaj', 'Abmin', 'Bbmin',         'Dbmaj', 'Ebmin', 'Fdim'],
+    
+    'G' : ['Gmaj', 'Amin', 'Bmin', 'Cmaj', 'Dmaj', 'Emin', 'F#dim',
+                                                           'Gbdim'],
+
+    'G# / Ab' : ['Abmaj', 'Bbmin' ,'Cmin', 'Dbmaj', 'Ebmaj', 'Fmin' ,'Gdim',
+                 'G#maj', 'A#min'          'C#maj', 'D#maj'],
+
+    'A' : ['Amaj', 'Bmin', 'C#min', 'Dmaj', 'Emaj', 'F#min', 'G#dim',
+                           'Dbmin',                 'Gbmin', 'Abdim'],
+
+    'A# / Bb' : ['Bbmaj', 'Cmin', 'Dmin', 'Ebmaj', 'Fmaj', 'Gmin', 'Adim',
+                 'A#maj',                 'D#maj'],
+
+    'B' : ['Bmaj', 'C#min', 'D#min', 'Emaj', 'F#maj', 'G#min', 'A#dim',
+                   'Dbmin', 'Ebmin',         'Gbmaj', 'Abmin', 'Bbdim']
+}
+
+ 
+# TODO
+# dorian
+# phrygian
+# lydian
+# mixolydian
+# other modes...
+
+
+# Corresponding alphacube colours, this helps with identifying each chords harmonic function
+alphacube_colours = {
+    'C' : 'o',
+    'C#' : 'p',
+    'Db' : 'g',
+    'D' : 'g',
+    'D#' : 'o',
+    'Eb' : 'o',
+    'E' : 'p',
+    'F' : 'g',
+    'F#' : 'o',
+    'Gb' : 'o',
+    'G' : 'p',
+    'G#' : 'g',
+    'Ab' : 'g',
+    'A' : 'o',
+    'A#' : 'p',
+    'Bb' : 'p',
+    'B' : 'g'
+}
+
+
 class Song():
     """
     Stores data for the Song.
@@ -73,6 +142,35 @@ class Song():
             song_chords.append(part_chords)
         
         return song_chords
+
+
+    def get_most_likely_major_key_cube_per_part(self):
+        """
+        Get the most likely major key cube of each part of the Song given the chords E.g. ['Cmaj', 'Dmin', 'Emin'] is most likely C major
+        """
+        chords_in_parts = self.get_chords()
+
+        for chords_in_part in chords_in_parts:
+            for mode, key_cubes in zip(['major keys'], [major_key_cubes]):
+                
+                # Dictionary to store the count for each key_cube a chord is in
+                counts = {}  
+                
+                # For each chord see which keys it falls in e.g. Cmaj is in Cmaj (or Amin), Fmaj (or Dmin), Gmaj
+                for chord in chords_in_part:
+                    for key_cube, chords_in_key_cube in key_cubes.items():
+                        if chord in chords_in_key_cube:
+                            counts[key_cube] = counts.get(key_cube, 0) + 1
+                
+                # Get the most likely keys but taking the keys that had the most chords
+                most_likely_keys = [lst_name for lst_name, count in counts.items() if count == max(counts.values())]
+                
+                # Get the most likely keys with their alphacube colours
+                most_likely_keys_with_colours = {key: alphacube_colours[key] for key in alphacube_colours if key in most_likely_keys}
+             
+                print(mode)
+                print(counts)
+                print(most_likely_keys_with_colours)
 
 
     def create_coloured_chords_image(self):
