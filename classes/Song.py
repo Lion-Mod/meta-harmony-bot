@@ -57,6 +57,24 @@ class Song():
         return song_chord_colours
 
 
+    def get_chords(self):
+        """
+        Get all the chords
+        """
+        song_chords = []
+
+        for p in self.parts:
+        
+            part_chords = []
+            
+            for c in p.coloured_chords:
+                part_chords.append(c.chord)
+            
+            song_chords.append(part_chords)
+        
+        return song_chords
+
+
     def create_coloured_chords_image(self):
         """
         Creates an image of a song's chords with the appropriate Meta Harmony colours

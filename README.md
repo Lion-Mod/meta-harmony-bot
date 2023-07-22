@@ -19,6 +19,8 @@
 * ~~Make Part objects (each part consists of ColouredChords)~~
 * ~~Make Song object (each Song is made up of Parts, each Part is make up of ColouredChords)~~
 * ~~Rework coloured image generator into Song~~
+* ~~Identify most likely major key of each section of the song is~~
+* ~~Make basic app~~
 
 * Identify most likely key of each section of the song is
 * Identify most likely mode each section of the song is
@@ -27,6 +29,5 @@
 * Do the above but for an entire section e.g. change the intro to be xxx
 (Don't affect chords not in the key e.g. Cmajor key, there's a Bb chord, leave it)
 
-* Visualise the coloured chords in an interactive web app
 * Get the coloured chords to format correctly based upon chord length e.g. 1 bar, 2 bars...
 * Feedbacker? Rates your composition? WTF would this be?! Maybe an analyser? Detects common trends?
