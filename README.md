@@ -1,11 +1,16 @@
-# Meta Harmony Bot
+#  Meta Harmony Crayon Box 🟨🟥🟦🟧🟩🟪
 
 ## TLDR of what it does
-1. Get some chords to a song by an artist / band
-2. Colour the chords and extensions using MetaHarmony principles
-3. Output coloured chords and extensions
+1. Input chords to a piece of music OR get some chords to a song by an artist / band (if they're available)
+2. The crayon box colours the chords and extensions using Meta Harmony
+3. The newly coloured chords and extensions (where applicable) are outputted
 
-## Uses
+## What is Meta Harmony?
+[This video has a good high level run through of it](https://www.youtube.com/watch?v=qjR13Jz7YYw)
+
+Come to the [Discord](https://discord.gg/nwHRsgbx) to find out more!
+
+## Uses of the crayon box
 1. Understand if there are common types of voice leading in a song
 2. See if certain artists, bands or genres use common chord movements
 
