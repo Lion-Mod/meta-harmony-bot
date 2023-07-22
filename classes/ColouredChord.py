@@ -232,7 +232,7 @@ class ColouredChord():
         This is needed for the chord colourer to work.
 
         Example : 'C' becomes 'Cmaj', 'C7' becomes 'Cdom7', 'Bb' becomes 'Bbmaj'
-        """        
+        """     
         # Pull out the root note and chord type from the raw chord
         root_note = re.findall(r'[A-G][b#]?', self.raw_chord)[0]
         chord_type = self.raw_chord.replace(root_note, "")
@@ -257,6 +257,8 @@ class ColouredChord():
                 chord_type = 'min7b5'
             elif chord_type == "7":
                 chord_type = 'dom7'
+            elif bool(re.match(r'^m[b#]?[0-9]+', chord_type)):
+                chord_type = chord_type.replace('m', 'min')
 
             return root_note + chord_type + "/" + bass_note
 
@@ -274,6 +276,8 @@ class ColouredChord():
             return root_note + 'min7b5'
         elif chord_type == "7":
             return root_note + "dom7"
+        elif bool(re.match(r'^m[b#]?[0-9]+', chord_type)):
+            return root_note + chord_type.replace('m', 'min')
 
         else:
             return self.raw_chord
