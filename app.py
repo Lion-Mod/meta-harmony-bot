@@ -49,24 +49,30 @@ st.title('Meta Harmony Crayon Box 🖍️')
 # Example input
 st.subheader("Here's an example input")
 st.code("""
-        {'Intro' : ['Cmaj7', 'Emin', 'Dm'],
-         'Verse' : ['Cmaj7', 'Dmin', 'Gdom7'],
-         'Chorus' : ['Am', 'Gm7', 'Dm7']}
+        {'Intro' : ['Cmaj7', 'Emin', 'Dmin'],
+         'Verse' : ['Cmaj7', 'Dmin', 'Gdom7/#9'],
+         'Chorus' : ['Amin', 'Gmin7', 'Dmin9']}
         """, language='python')
 
 # Get the user input 
-st.subheader('Input the composition of the track and hit "Enter"')
+st.subheader('Input the composition of the track and hit "Enter" to colour the chords')
+
 song = st.text_input('user_input', 
-                     value = "{'Intro' : ['Cmaj7', 'Emin', 'Dm'], 'Verse' : ['Cmaj7', 'Dmin', 'Gdom7'], 'Chorus' : ['Am', 'Gm7', 'Dm7']}",
-                     label_visibility = 'hidden')
+                    value = "{'Intro' : ['Cmaj7', 'Emin', 'Dmin'], 'Verse' : ['Cmaj7', 'Dmin', 'Gdom7/#9'], 'Chorus' : ['Amin', 'Gmin7', 'Dmin9']}",
+                    label_visibility = 'hidden')
+
+
 
 # Once the input is done and Enter is hit, output the song with Meta Harmony colours
 if song:
     
-    # Take the user's input and perform clean up on it
-    s = Song(song_name = '', 
-             artist_name = '', 
-             song_structure_and_chords = ast.literal_eval(song))
+    try:
+        # Take the user's input and perform clean up on it
+        s = Song(song_name = '', 
+                 artist_name = '', 
+                 song_structure_and_chords = ast.literal_eval(song))
+    except ValueError:
+        st.error("The chord format isn't correct or the input isn't appropriate. It must match the above example.")
 
     # Get the part names of the song
     part_names = [part.name for part in s.parts]
