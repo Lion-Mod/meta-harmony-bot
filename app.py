@@ -82,8 +82,8 @@ st.code("""
 
 
 # Get the user input 
-st.subheader('Input the composition of the track and hit "Enter" to colour the chords')
-song = st.text_area("Enter chords:")
+st.subheader('Input the composition of the track and hit "Ctrl+Enter or Cmd+Enter" to colour the chords')
+song = st.text_area("user input", label_visibility = 'hidden')
 
 
 # Once the input is done and Enter is hit, output the song with Meta Harmony colours
