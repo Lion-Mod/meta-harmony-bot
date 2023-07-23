@@ -100,10 +100,12 @@ def get_right_border_colour(chord_colour, third_extension_colour):
         return f'6px solid {colour_mapping[third_extension_colour]}'
 
 
-# App header
+## START OF THE STREAMLIT APP ##
+
+# App title
 st.title('Meta Harmony Crayon Box 🖍️')
 
-# Example input
+# Example input being displayed to the user
 example_input = "Intro\nCmaj7 Emin Dmin Ddom7\nCmaj7 Dmin Gdom7/#9\n\nVerse\nAmin Gmin7 Dmin9"
 st.subheader("Here's an example input")
 st.code(example_input, language = 'python')
@@ -114,50 +116,41 @@ song = st.text_area("Note : this app doesn't handle add, augmented or chords suc
                     value = example_input, height = 250)
 
 
-# Once the input is done and Enter is hit, output the song with Meta Harmony colours
+# Output the song with Meta Harmony colors if there is a song input
 if song is not None:
-    
-    # Get the user defined song parts and the names of them
+
+    # Get the user-defined song parts and their names
     song_parts = get_song_parts(song)
     song_part_names = get_song_part_names(song)
 
-    # For each of these song parts output the part name and coloured chords
     for song_part, song_part_name in zip(song_parts, song_part_names):
 
         # Output part name e.g. Chorus
         f"#### {song_part_name}"
 
         try:
-            # Take the user's chords for this part and perform clean up on it
-            s = Song(song_name = '', 
-                     artist_name = '', 
-                     song_structure_and_chords = process_user_input_to_dictionary(song_part))
+            # Clean up user's chords for the song_part
+            cleaned_chords = process_user_input_to_dictionary(song_part)
+            s = Song(song_name = '', artist_name = '', song_structure_and_chords = cleaned_chords)
         except BaseException:
             st.error("The chord format isn't correct or the input isn't appropriate. It must match the above example.")
 
-        # For each part show the chords using Meta Harmony colours
+        # Display the chords for each part with their appropriate Meta Harmony colors
         for chords, colours_of_chords in zip(s.get_chords(), s.get_chord_colours()):
-            
-            # Get the colours of the chord
-            chord_main_colours = [chord[0] for chord in colours_of_chords]
-            first_extension_colours = [chord[1] for chord in colours_of_chords]
-            second_extension_colours = [chord[2] for chord in colours_of_chords]
-            third_extension_colours = [chord[3] for chord in colours_of_chords]
+            # Separate chord colors into individual lists
+            chord_main_colours, first_extension_colours, second_extension_colours, third_extension_colours = zip(*colours_of_chords)
 
             # Create a block of text to represent the chords in the part
             chords_as_text = []
-            
-            # Loop through each chord in the part and it's colours and display them appropriately
-            for (chord, chord_colour, first_extension_colour, 
-                second_extension_colour, third_extension_colour) in zip(chords, chord_main_colours, 
-                                                                        first_extension_colours, second_extension_colours, third_extension_colours):
-                chords_as_text.append(annotation(chord, 
-                                                '', 
-                                                font_family = 'Arial', 
-                                                background = colour_mapping[chord_colour], 
-                                                border_top = get_top_border_colour(chord_colour, first_extension_colour),
-                                                border_bottom = get_bottom_border_colour(chord_colour, second_extension_colour),
-                                                border_right = get_right_border_colour(chord_colour, third_extension_colour),
-                                                color = 'white'))
-            
+
+            # Display each chord and its colors appropriately
+            for chord, main_color, ext_color1, ext_color2, ext_color3 in zip(chords, chord_main_colours,
+                                                                            first_extension_colours, second_extension_colours,
+                                                                            third_extension_colours):
+                chords_as_text.append(
+                    annotation(chord, '', font_family = 'Arial', background = colour_mapping[main_color],
+                               border_top = get_top_border_colour(main_color, ext_color1),
+                               border_bottom = get_bottom_border_colour(main_color, ext_color2),
+                               border_right = get_right_border_colour(main_color, ext_color3), color = 'white'))
+
             annotated_text(chords_as_text)
