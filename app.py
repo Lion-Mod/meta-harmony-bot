@@ -83,7 +83,7 @@ st.code("""
 
 # Get the user input 
 st.subheader('Input the composition of the track and hit "Ctrl+Enter or Cmd+Enter" to colour the chords')
-song = st.text_area("user input", label_visibility = 'hidden')
+song = st.text_area("Note : this app doesn't handle add, augmented or chords such as C5, C6. If you want to use your chords you can add 'maj' to the chords to get them to display.")
 
 
 # Once the input is done and Enter is hit, output the song with Meta Harmony colours
