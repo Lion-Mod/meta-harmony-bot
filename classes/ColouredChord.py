@@ -136,7 +136,7 @@ chord2colour = {'Cmaj' : 'o',
 
 # The extension type for each extension
 # Some chords e.g. Fdom11 are considered their own 
-extension2extension_type = {'b5' : 'syntonic',
+extension2extension_type = {'#5' : 'complimentary',
                             'b6' : 'complimentary',
                             '9' : 'complimentary',
                             'b9' : 'syntonic',
@@ -257,6 +257,12 @@ class ColouredChord():
                 chord_type = 'min7b5'
             elif chord_type == "7":
                 chord_type = 'dom7'
+            elif chord_type == "9":
+                chord_type = 'dom9'
+            elif chord_type == "11":
+                chord_type = 'dom11'
+            elif chord_type == "13":
+                chord_type = 'dom13'
             elif bool(re.match(r'^m[b#]?[0-9]+', chord_type)):
                 chord_type = chord_type.replace('m', 'min')
 
@@ -276,6 +282,12 @@ class ColouredChord():
             return root_note + 'min7b5'
         elif chord_type == "7":
             return root_note + "dom7"
+        elif chord_type == "9":
+            return root_note + 'dom9'
+        elif chord_type == "11":
+            return root_note + 'dom11'
+        elif chord_type == "13":
+            return root_note + 'dom13'
         elif bool(re.match(r'^m[b#]?[0-9]+', chord_type)):
             return root_note + chord_type.replace('m', 'min')
 
@@ -337,7 +349,7 @@ class ColouredChord():
         Get the extensions, their type and their colour (if extensions are there), the max expected is 3
         """
         # Regex out the extensions (if they're there)
-        extension_pattern = "(b5|b6|min6|min7b5|dom|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
+        extension_pattern = "(#5|b6|min6|min7b5|dom|sus[2|4]+|[b#]?9|[b#]?11|[b]?13)"
         extensions = re.findall(extension_pattern, self.chord)
 
         extension_info = []
