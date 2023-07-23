@@ -12,6 +12,32 @@ colour_mapping = {'o' : 'orange',
                  'y' : 'yellow',
                  'b' : 'blue'}
 
+def process_user_input_to_dictionary(user_input):
+    """
+    Takes the user's input over multiple lines and creates the appropriate format ready for processing and chord colouring
+
+    Example
+    Cmaj7 Dmin7 Emin7
+    Amaj9/#11
+
+    Example output
+    {'Section 1' : ['Cmaj7', 'Dmin7', 'Emin7'],
+     'Section 2' : ['Amaj9/#11']}
+    """
+    # Split the users input into each line
+    user_input_split_per_line = user_input.splitlines()
+    
+    # Convert each line into a list of chords
+    lists_of_chords = [chords_in_line.split() for chords_in_line in user_input_split_per_line]
+
+    # Take each list of chords and store them in a dictionary, each key is a section for the song
+    processed_input_as_dictionary = {
+        'Section ' + str(section_number + 1): collection_of_bars 
+        for section_number, collection_of_bars in enumerate(lists_of_chords)
+    }
+
+    return processed_input_as_dictionary
+
 
 def get_top_border_colour(chord_colour, first_extension_colour):
     """
@@ -49,28 +75,25 @@ st.title('Meta Harmony Crayon Box 🖍️')
 # Example input
 st.subheader("Here's an example input")
 st.code("""
-        {'Intro' : ['Cmaj7', 'Emin', 'Dmin'],
-         'Verse' : ['Cmaj7', 'Dmin', 'Gdom7/#9'],
-         'Chorus' : ['Amin', 'Gmin7', 'Dmin9']}
-        """, language='python')
+        Cmaj7 Emin Dmin Ddom7
+        Cmaj7 Dmin Gdom7/#9
+        Amin Gmin7 Dmin9
+        """, language = 'python')
+
 
 # Get the user input 
 st.subheader('Input the composition of the track and hit "Enter" to colour the chords')
-
-song = st.text_input('user_input', 
-                    value = "{'Intro' : ['Cmaj7', 'Emin', 'Dmin'], 'Verse' : ['Cmaj7', 'Dmin', 'Gdom7/#9'], 'Chorus' : ['Amin', 'Gmin7', 'Dmin9']}",
-                    label_visibility = 'hidden')
-
+song = st.text_area("Enter chords:")
 
 
 # Once the input is done and Enter is hit, output the song with Meta Harmony colours
-if song:
+if song is not None:
     
     try:
         # Take the user's input and perform clean up on it
         s = Song(song_name = '', 
                  artist_name = '', 
-                 song_structure_and_chords = ast.literal_eval(song))
+                 song_structure_and_chords = process_user_input_to_dictionary(song))
     except ValueError:
         st.error("The chord format isn't correct or the input isn't appropriate. It must match the above example.")
 
