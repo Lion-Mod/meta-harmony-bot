@@ -94,7 +94,7 @@ if song is not None:
         s = Song(song_name = '', 
                  artist_name = '', 
                  song_structure_and_chords = process_user_input_to_dictionary(song))
-    except ValueError:
+    except BaseException:
         st.error("The chord format isn't correct or the input isn't appropriate. It must match the above example.")
 
     # Get the part names of the song
