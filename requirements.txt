@@ -1,6 +1,2 @@
-beautifulsoup4==4.12.2
 fastcore==1.5.29
-langchain==0.0.239
-Pillow==10.0.0
-Requests==2.31.0
 st_annotated_text==4.0.0
